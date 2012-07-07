@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+require 'frenzy_bunnies'
+require 'frenzy_bunnies/cli'
+
+FrenzyBunnies::CLI.start
+
