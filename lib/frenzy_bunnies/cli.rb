@@ -18,9 +18,11 @@ class FrenzyBunnies::CLI < Thor
     workers = []
     ObjectSpace.each_object(Class){|o| workers << o if o.ancestors.map(&:name).include? "FrenzyBunnies::Worker"}
     workers.uniq!
+    
     puts BUNNIES
-    puts "Discovered #{workers.inspect}"
+
     c = FrenzyBunnies::Context.new
+    c.logger.info "Discovered #{workers.inspect}"
     c.run *workers
     Signal.trap('INT') { c.stop; exit! }
   end

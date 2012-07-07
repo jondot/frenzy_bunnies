@@ -4,8 +4,8 @@ require File.expand_path('../lib/frenzy_bunnies/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Dotan Nahum"]
   gem.email         = ["jondotan@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{RabbitMQ JRuby based workers on top of hot_bunnies}
+  gem.summary       = %q{RabbitMQ JRuby based workers on top of hot_bunnies}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($\)
