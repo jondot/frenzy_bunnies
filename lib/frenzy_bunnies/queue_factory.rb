@@ -11,7 +11,7 @@ class FrenzyBunnies::QueueFactory
     exchange = channel.exchange(@exchange, :type => :direct, :durable => durable)
 
     queue = channel.queue(name)
-    queue.bind(exchange, :routing_key => name)
+    queue.bind(exchange, :routing_key => name, :durable => durable)
     queue
   end
 end
