@@ -57,7 +57,7 @@ module FrenzyBunnies::Worker
       say "stopping"
       @thread_pool.shutdown_now
       say "pool shutdown"
-      @s.cancel
+      # @s.cancel  #for some reason when the channel socket is broken, this is holding the process up and we're zombie.
       say "stopped"
     end
 
