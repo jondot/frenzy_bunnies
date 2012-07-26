@@ -21,7 +21,7 @@ module FrenzyBunnies::Worker
     def start(context)
       @logger = context.logger
 
-      queue_name = "#{@queue_name}#{context.env}"
+      queue_name = "#{@queue_name}_#{context.env}"
 
       @queue_opts[:prefetch] ||= 10
       @queue_opts[:durable] ||= false
