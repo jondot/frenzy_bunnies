@@ -21,6 +21,8 @@ module FrenzyBunnies::Worker
     def start(context)
       @logger = context.logger
 
+      queue_name = "#{@queue_name}#{context.env}"
+
       @queue_opts[:prefetch] ||= 10
       @queue_opts[:durable] ||= false
 
@@ -30,10 +32,10 @@ module FrenzyBunnies::Worker
         @thread_pool = Executors.new_cached_thread_pool
       end
 
-      q = context.queue_factory.build_queue(@queue_name, @queue_opts[:prefetch], @queue_opts[:durable])
+      q = context.queue_factory.build_queue(queue_name, @queue_opts[:prefetch], @queue_opts[:durable])
       @s = q.subscribe(:ack => true)
 
-      say "#{@queue_opts[:threads] ? "#{@queue_opts[:threads]} threads " : ''}with #{@queue_opts[:prefetch]} prefetch on <#{@queue_name}>."
+      say "#{@queue_opts[:threads] ? "#{@queue_opts[:threads]} threads " : ''}with #{@queue_opts[:prefetch]} prefetch on <#{queue_name}>."
 
       @s.each(:blocking => false, :executor => @thread_pool) do |h, msg|
         wkr = new
