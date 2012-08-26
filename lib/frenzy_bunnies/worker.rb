@@ -25,6 +25,7 @@ module FrenzyBunnies::Worker
 
       @queue_opts[:prefetch] ||= 10
       @queue_opts[:durable] ||= false
+      @queue_opts[:timeout_job_after] ||=5
 
       if @queue_opts[:threads]
         @thread_pool = Executors.new_fixed_thread_pool(@queue_opts[:threads])
@@ -40,12 +41,17 @@ module FrenzyBunnies::Worker
       @s.each(:blocking => false, :executor => @thread_pool) do |h, msg|
         wkr = new
         begin
-          if(wkr.work(msg))
-            h.ack
-          else
-            h.reject
-            error "Cannot process message <#{msg.inspect}>"
+          Timeout::timeout(@queue_opts[:timeout_job_after]) do
+            if(wkr.work(msg))
+              h.ack
+            else
+              h.reject
+              error "Cannot process message <#{msg.inspect}>"
+            end
           end
+        rescue Timeout::Error
+          h.reject
+          error "TIMEOUT #{@queue_opts[:timeout_job_after]} seconds have elapsed: #{$!}"
         rescue
           h.reject
           error "ERROR #{$!}"
