@@ -46,15 +46,15 @@ module FrenzyBunnies::Worker
               h.ack
             else
               h.reject
-              error "Cannot process message <#{msg.inspect}>"
+              error "REJECTED", msg
             end
           end
         rescue Timeout::Error
           h.reject
-          error "TIMEOUT #{@queue_opts[:timeout_job_after]} seconds have elapsed: #{$!}"
+          error "TIMEOUT #{@queue_opts[:timeout_job_after]}s", msg
         rescue
           h.reject
-          error "ERROR #{$!}"
+          error "ERROR #{$!}", msg
         end
       end
 
@@ -73,8 +73,8 @@ module FrenzyBunnies::Worker
       @logger.info "[#{self.name}] #{text}"
     end
     
-    def error(text)
-      @logger.error "[#{self.name}] #{text}"
+    def error(text, msg)
+      @logger.error "[#{self.name}] #{text} <#{msg}>"
     end
   end
 end
