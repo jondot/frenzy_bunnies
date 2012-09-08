@@ -17,4 +17,8 @@ Gem::Specification.new do |gem|
   
   gem.add_runtime_dependency 'hot_bunnies', '>= 1.4.0.pre3'
   gem.add_runtime_dependency 'thor'
+  gem.add_runtime_dependency 'sinatra'
+  gem.add_runtime_dependency 'atomic'
+
+  gem.add_development_dependency 'guard-coffeescript'
 end
