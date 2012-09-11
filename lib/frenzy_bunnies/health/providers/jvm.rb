@@ -28,7 +28,8 @@ class FrenzyBunnies::Health::Providers::Jvm
       if info && info.thread_name =~ @opts[:threadfilter]
         {
           :name => info.thread_name,
-          :stack_trace => info.stack_trace.to_a.inject([]){|a,s| a<<s.to_s }
+          :stack_trace => info.stack_trace.to_a.inject([]){|a,s| a<<s.to_s },
+          :state => info.thread_state.to_s
         }
       else
         nil

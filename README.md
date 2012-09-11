@@ -69,10 +69,10 @@ should be visible by the moment you write this code:
 
 ```ruby
 f = FrenzyBunnies::Context.new
-f.run FeedWorker,FeedDownloader
+f.run FeedWorker, FeedDownloader
 ```
 
-Which will run your workers immediately.
+In the listing above, `f.run` accepts your worker _classes_, and will run your workers immediately.
 
 
 ## Web Dashboard
@@ -94,7 +94,7 @@ context definitions
 
 ### Worker Configuration
 
-say `from_queue 'queue_name'` and pass any of these options:
+In your worker class, say `from_queue 'queue_name'` and pass any of these options:
 
 ```ruby
 :prefetch  # default 10. number of messages to prefetch each time
@@ -103,6 +103,16 @@ say `from_queue 'queue_name'` and pass any of these options:
 :threads  # default none. number of threads in the threadpool. leave empty to let the threadpool manage it.
 ```
 
+Example:
+
+
+```ruby
+class FeedWorker
+  include FrenzyBunnies::Worker
+  from_queue 'new.feeds', :prefetch => 20, :threads => 13, :durable => true
+
+...  
+```
 
 ### General Configuration
 
@@ -132,14 +142,16 @@ semantics, the following is the AMQP wireup used within this library:
 
 * Durable per configuration
 * The exchange is created and named by default `frenzy_bunnies`
-* Each worker is bound to an AMQP queue named `my_queue`_`environment` with the environment postfix appended automatically.
+* Each worker is bound to an AMQP queue named `my_queue_environment` with the environment postfix appended automatically.
 * The routing key on the exchange is of the same name and bound to the queue.
 
-## Contributing
+# Contributing
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+Fork, implement, add tests, pull request, get my everlasting thanks and a respectable place here :).
+
+
+# Copyright
+
+Copyright (c) 2012 [Dotan Nahum](http://gplus.to/dotan) [@jondot](http://twitter.com/jondot). See MIT-LICENSE for further details.
+
 

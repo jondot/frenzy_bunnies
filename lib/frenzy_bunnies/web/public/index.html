@@ -75,6 +75,25 @@
         white-space: nowrap;
         overflow: hidden;
       }
+      .thread-name .state{
+        font-size:0.5em;
+      }
+      .state.NEW{
+        background-color: #ddd
+      }
+      .state.RUNNABLE{
+        background-color:#468847;
+      }
+      .state.BLOCKED{
+        background-color:#000;
+      }
+      .state.WAITING{
+      }
+      .state.TIMED_WAITING{
+      }
+      .state.TERMINATED{
+        background-color: red;
+      }
     </style>
     <script id="tmpl-job" type="text/template">
       <div class="job-detail">
@@ -126,7 +145,10 @@
       <article id="threads">
         <% _.each(threads, function(thread) { %> 
           <div class="thread">
-            <div class="thread-name span4" title="<%= thread.name %>"><%= thread.name %></div>
+            <div class="thread-name span4" title="<%= thread.name %>">
+              <%= thread.name %><br/>
+              <span class="label state <%=thread.state%>"><%= thread.state %></span>
+            </div>
             <div class="thread-stack span8">
               <% _.each(thread.stack_trace, function(fragment, i) { %> 
                 <% fragment_el = ellipsis(fragment, 80); %>
