@@ -79,7 +79,13 @@ In the listing above, `f.run` accepts your worker _classes_, and will run your w
 
 When FrenzyBunnies run, it will automatically create a web dashboard for you, on `localhost:11333` by default.
 
-`image`
+
+Currently, the dashboard displays your job statistics (passed vs. failed), JVM
+health (heap usage) and threads overview.
+
+
+<img src="https://raw.github.com/jondot/frenzy_bunnies/master/fb-cap.png"/><br/>
+
 
 Changing the bound address is easy to do through the many options you can pass to the running `Context`:
 

@@ -1,5 +1,5 @@
 require 'sinatra/base'
-
+require 'json'
 
 class FrenzyBunnies::Web < Sinatra::Base
   configure do
@@ -39,7 +39,7 @@ class FrenzyBunnies::Web < Sinatra::Base
   end
 
   def self.run_with(jobs, opts={})
-    set :jobs, jobs
+    set :jobs, (jobs || [])
     set :health_collector, FrenzyBunnies::Health::Collector.new({:jvm => {:threadfilter => opts[:threadfilter]}})
     @logger = opts[:logger]
     @logger.info "* running web dashboard bound to #{opts[:host]} on port #{opts[:port]}."

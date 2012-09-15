@@ -12,7 +12,7 @@ class FrenzyBunnies::Context
     @opts[:web_host] ||= 'localhost'
     @opts[:web_port] ||= 11333
     @opts[:web_threadfilter] ||= /^pool-.*/
-    @opts[:env] ||= ''
+    @opts[:env] ||= 'development'
 
     @env = @opts[:env]
     @logger = @opts[:logger] || Logger.new(STDOUT)
