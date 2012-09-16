@@ -2,7 +2,7 @@ require 'logger'
 require 'frenzy_bunnies/web'
 
 class FrenzyBunnies::Context
-  attr_reader :queue_factory, :logger, :env
+  attr_reader :queue_factory, :logger, :env, :opts
 
   def initialize(opts={})
     @opts = opts

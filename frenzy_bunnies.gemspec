@@ -22,4 +22,6 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'json'
 
   gem.add_development_dependency 'guard-coffeescript'
+  gem.add_development_dependency 'rr'
+  gem.add_development_dependency 'guard-minitest'
 end

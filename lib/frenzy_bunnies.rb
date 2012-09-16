@@ -1,5 +1,5 @@
 require 'hot_bunnies'
-
+require 'timeout'
 
 module FrenzyBunnies
 end

@@ -53,7 +53,6 @@ module FrenzyBunnies::Worker
             if(wkr.work(msg))
               h.ack
               incr! :passed
-              @jobs_stats[:passed].update { |v| v + 1 }
             else
               h.reject
               incr! :failed
@@ -80,6 +79,10 @@ module FrenzyBunnies::Worker
       say "pool shutdown"
       # @s.cancel  #for some reason when the channel socket is broken, this is holding the process up and we're zombie.
       say "stopped"
+    end
+
+    def queue_opts
+      @queue_opts
     end
 
     def jobs_stats
