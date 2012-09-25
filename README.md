@@ -1,11 +1,11 @@
 # FrenzyBunnies
 
-A lightweight JRuby based library backed by RabbitMQ and the very efficient `hot_bunnies` RabbitMQ driver for very fast and
-efficient processing of RabbitMQ background jobs and messages.
+A lightweight background workers library based on JRuby and the very efficient `hot_bunnies` RabbitMQ driver for very fast and
+efficient processing.
 
 Unlike other background job processing libraries, a Frenzy Bunnies worker is offering its work to a native JVM-based thread pool, where threads are allocated and cached.  
 
-This firstly means the processing model isn't process-per-worker (saving memory) and it also isnt fixed-thread-per-worker based (saving memory even further).
+This firstly means that the processing model isn't process-per-worker (saving memory) and it also isn't fixed-thread-per-worker based allowing workers to be pooled(saving memory even further).
 
 RabbitMQ is a really awesome queue solution for background jobs as well as more real-time messaging processing. Within its strengths are its [performance](http://www.rabbitmq.com/blog/2012/04/17/rabbitmq-performance-measurements-part-1/), portability - [almost every worthy server-side language and platform](http://www.rabbitmq.com/devtools.html) has a RabbitMQ driver and you're not limited to process on a single platform, and high-availability out of the box (as opposed to Redis, although [Sentinel](http://redis.io/topics/sentinel-spec) is quite a progress - hurray!).  
 
