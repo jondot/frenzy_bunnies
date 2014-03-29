@@ -18,7 +18,6 @@ class FrenzyBunnies::Context
     @logger = @opts[:logger] || Logger.new(STDOUT)
     params = {:host => @opts[:host], :heartbeat_interval => @opts[:heartbeat]}
     (params[:username], params[:password] = @opts[:username], @opts[:password]) if @opts[:username] && @opts[:password]
-    end
     @connection = HotBunnies.connect(params)
     @connection.add_shutdown_listener(lambda { |cause| @logger.error("Disconnected: #{cause}"); stop;})
 
