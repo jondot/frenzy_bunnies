@@ -16,7 +16,10 @@ class FrenzyBunnies::Context
 
     @env = @opts[:env]
     @logger = @opts[:logger] || Logger.new(STDOUT)
-    @connection = HotBunnies.connect(:host => @opts[:host], :heartbeat_interval => @opts[:heartbeat])
+    params = {:host => @opts[:host], :heartbeat_interval => @opts[:heartbeat]}
+    (params[:username], params[:password] = @opts[:username], @opts[:password]) if @opts[:username] && @opts[:password]
+    (params[:port] = @opts[:port]) if @opts[:port]
+    @connection = HotBunnies.connect(params)
     @connection.add_shutdown_listener(lambda { |cause| @logger.error("Disconnected: #{cause}"); stop;})
 
     @queue_factory = FrenzyBunnies::QueueFactory.new(@connection, @opts[:exchange])
@@ -25,6 +28,7 @@ class FrenzyBunnies::Context
   def run(*klasses)
     @klasses = []
     klasses.each{|klass| klass.start(self); @klasses << klass}
+    return nil if @opts[:disable_web_stats]
     Thread.new do
       FrenzyBunnies::Web.run_with(@klasses, :host => @opts[:web_host], :port => @opts[:web_port], :threadfilter => @opts[:web_threadfilter], :logger => @logger)
     end
