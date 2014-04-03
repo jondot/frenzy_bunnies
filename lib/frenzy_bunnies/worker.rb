@@ -67,7 +67,7 @@ module FrenzyBunnies::Worker
 
         begin
           Timeout::timeout(@queue_opts[:timeout_job_after]) do
-            if(wkr.run!(h, msg))
+            if(wkr.work(msg))
               h.ack
               incr! :passed
             else
