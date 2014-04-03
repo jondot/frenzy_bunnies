@@ -41,7 +41,12 @@ module FrenzyBunnies::Worker
         @thread_pool = Executors.new_cached_thread_pool
       end
 
-      q = context.queue_factory.build_queue(queue_name, @queue_opts)
+      factory_options = filter_hash(queue_opts, :exchange_options,
+                                                :queue_options,
+                                                :bind_options,
+                                                :prefetch)
+
+      q = context.queue_factory.build_queue(queue_name, factory_options)
 
       @s = q.subscribe(ack: true)
 
@@ -111,6 +116,17 @@ module FrenzyBunnies::Worker
     def incr!(what)
       @jobs_stats[what].update { |v| v + 1 }
     end
+
+    def filter_hash(hash, *args)
+      return nil if args.size == 0
+      if args.size == 1
+        args[0] = args[0].to_s if args[0].is_a?(Symbol)
+        hash.select {|key| key.to_s.match(args.first) }
+      else
+        hash.select {|key| args.include?(key)}
+      end
+    end
+
   end
 end
 
