@@ -24,7 +24,7 @@ module FrenzyBunnies::Worker
     end
 
     def start(context)
-      @jobs_stats = { :failed => Atomic.new(0), :passed => Atomic.new(0) }
+      @jobs_stats = { failed: Atomic.new(0), passed: Atomic.new(0) }
       @working_since = Time.now
 
       @logger = context.logger
@@ -41,18 +41,27 @@ module FrenzyBunnies::Worker
         @thread_pool = Executors.new_cached_thread_pool
       end
 
-      q = context.queue_factory.build_queue(queue_name, @queue_opts[:prefetch],
-                                            @queue_opts[:durable], @queue_opts[:routing_key])
+      q = context.queue_factory.build_queue(queue_name, @queue_opts)
 
-      @s = q.subscribe(:ack => true)
+      @s = q.subscribe(ack: true)
 
       say "#{@queue_opts[:threads] ? "#{@queue_opts[:threads]} threads " : ''}with #{@queue_opts[:prefetch]} prefetch on <#{queue_name}>."
 
-      @s.each(:blocking => false, :executor => @thread_pool) do |h, msg|
+      @s.each(blocking: false, executor: @thread_pool) do |h, msg|
         wkr = new
+
+        work_block = Proc.new do |header, message|
+          case wkr.method(:work).arity
+          when 2
+            wkr.work(header, message)
+          when 1
+            wkr.work(message)
+          end
+        end
+
         begin
           Timeout::timeout(@queue_opts[:timeout_job_after]) do
-            if(wkr.work(msg))
+            if(work_block(h, msg))
               h.ack
               incr! :passed
             else
@@ -88,7 +97,7 @@ module FrenzyBunnies::Worker
     end
 
     def jobs_stats
-      Hash[ @jobs_stats.map{ |k,v| [k, v.value] } ].merge({ :since => @working_since.to_i })
+      Hash[ @jobs_stats.map{ |k,v| [k, v.value] } ].merge({ since: @working_since.to_i })
     end
   private
     def say(text)
