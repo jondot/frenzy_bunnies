@@ -9,15 +9,17 @@ module FrenzyBunnies::Worker
   end
 
   def work
-
+    raise Exception, "Please overwrite this method!"
   end
 
   def run!(header, message)
-    case self.method(:work).arity
+    case method(:work).arity
     when 2
-      self.work(header, message)
+      work(header, message)
     when 1
-      self.work(message)
+      work(message)
+    else
+      raise Exception, "Please define #work method with one or two arguments!"
     end
   end
 
@@ -40,9 +42,9 @@ module FrenzyBunnies::Worker
 
       queue_name = "#{@queue_name}_#{context.env}"
 
-      @queue_opts[:prefetch] ||= 10
-      @queue_opts[:durable] ||= false
-      @queue_opts[:timeout_job_after] ||=5
+      @queue_opts[:prefetch]          ||= 10
+      @queue_opts[:durable]           ||= false
+      @queue_opts[:timeout_job_after] ||= 5
 
       if @queue_opts[:threads]
         @thread_pool = Executors.new_fixed_thread_pool(@queue_opts[:threads])
