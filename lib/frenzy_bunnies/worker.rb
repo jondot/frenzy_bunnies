@@ -65,6 +65,7 @@ module FrenzyBunnies::Worker
       say "#{@queue_opts[:threads] ? "#{@queue_opts[:threads]} threads " : ''}with #{@queue_opts[:prefetch]} prefetch on <#{queue_name}>."
 
       @s.each(blocking: false, executor: @thread_pool) do |h, msg|
+        say "Passing message #{msg.inspect} to worker"
         wkr = new
 
         begin
