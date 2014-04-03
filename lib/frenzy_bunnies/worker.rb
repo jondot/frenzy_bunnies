@@ -12,6 +12,15 @@ module FrenzyBunnies::Worker
 
   end
 
+  def run!(header, message)
+    case self.method(:work).arity
+    when 2
+      self.work(header, message)
+    when 1
+      self.work(message)
+    end
+  end
+
   def self.included(base)
     base.extend ClassMethods
   end
@@ -56,18 +65,9 @@ module FrenzyBunnies::Worker
       @s.each(blocking: false, executor: @thread_pool) do |h, msg|
         wkr = new
 
-        work_block = Proc.new do |header, message|
-          case wkr.method(:work).arity
-          when 2
-            wkr.work(header, message)
-          when 1
-            wkr.work(message)
-          end
-        end
-
         begin
           Timeout::timeout(@queue_opts[:timeout_job_after]) do
-            if(work_block(h, msg))
+            if(wkr.run!(h, msg))
               h.ack
               incr! :passed
             else
