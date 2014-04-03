@@ -32,6 +32,12 @@ class FrenzyBunnies::QueueFactory
     options[:exchange_options][:type]    ||= :direct
     options[:exchange_options][:durable] ||= false
 
+    unless options[:durable].nil?
+      options[:exchange_options][:durable] = options[:durable]
+      options[:queue_options][:durable]    = options[:durable]
+      options.delete(:durable)
+    end
+
     options[:queue_options][:durable] ||= false
 
     options

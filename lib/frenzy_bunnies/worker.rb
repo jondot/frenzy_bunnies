@@ -41,10 +41,11 @@ module FrenzyBunnies::Worker
         @thread_pool = Executors.new_cached_thread_pool
       end
 
-      factory_options = filter_hash(queue_opts, :exchange_options,
-                                                :queue_options,
-                                                :bind_options,
-                                                :prefetch)
+      factory_options = filter_hash(@queue_opts, :exchange_options,
+                                                 :queue_options,
+                                                 :bind_options,
+                                                 :durable,
+                                                 :prefetch)
 
       q = context.queue_factory.build_queue(queue_name, factory_options)
 
