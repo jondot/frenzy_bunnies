@@ -103,10 +103,11 @@ context definitions
 In your worker class, say `from_queue 'queue_name'` and pass any of these options:
 
 ```ruby
-:prefetch  # default 10. number of messages to prefetch each time
-:durable   # default false. durability of the queue
+:prefetch    # default 10. number of messages to prefetch each time
+:routing_key # default using queue_name
+:durable     # default false. durability of the queue
 :timeout_job_after # default 5. reject the message if not processed for number of seconds
-:threads  # default none. number of threads in the threadpool. leave empty to let the threadpool manage it.
+:threads     # default none. number of threads in the threadpool. leave empty to let the threadpool manage it.
 ```
 
 Example:

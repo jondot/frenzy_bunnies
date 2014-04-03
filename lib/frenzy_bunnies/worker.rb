@@ -41,7 +41,9 @@ module FrenzyBunnies::Worker
         @thread_pool = Executors.new_cached_thread_pool
       end
 
-      q = context.queue_factory.build_queue(queue_name, @queue_opts[:prefetch], @queue_opts[:durable])
+      q = context.queue_factory.build_queue(queue_name, @queue_opts[:prefetch],
+                                            @queue_opts[:durable], @queue_opts[:routing_key])
+
       @s = q.subscribe(:ack => true)
 
       say "#{@queue_opts[:threads] ? "#{@queue_opts[:threads]} threads " : ''}with #{@queue_opts[:prefetch]} prefetch on <#{queue_name}>."
