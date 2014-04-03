@@ -1,6 +1,5 @@
 require 'atomic'
 
-
 module FrenzyBunnies::Worker
   import java.util.concurrent.Executors
 
@@ -65,12 +64,16 @@ module FrenzyBunnies::Worker
       say "#{@queue_opts[:threads] ? "#{@queue_opts[:threads]} threads " : ''}with #{@queue_opts[:prefetch]} prefetch on <#{queue_name}>."
 
       @s.each(blocking: false, executor: @thread_pool) do |h, msg|
-        say "Passing message #{msg.inspect} to worker"
-        wkr = new
+        begin
+          wkr = new
+        rescue => e
+          error "Error while initializing worker #{@queue_name}", e.inspect
+          raise e
+        end
 
         begin
           Timeout::timeout(@queue_opts[:timeout_job_after]) do
-            if(wkr.work(msg))
+            if(wkr.run!(h, msg))
               h.ack
               incr! :passed
             else
@@ -108,7 +111,7 @@ module FrenzyBunnies::Worker
     def jobs_stats
       Hash[ @jobs_stats.map{ |k,v| [k, v.value] } ].merge({ since: @working_since.to_i })
     end
-  private
+
     def say(text)
       @logger.info "[#{self.name}] #{text}"
     end
@@ -117,6 +120,7 @@ module FrenzyBunnies::Worker
       @logger.error "[#{self.name}] #{text} <#{msg}>"
     end
 
+  private
     def incr!(what)
       @jobs_stats[what].update { |v| v + 1 }
     end
@@ -133,4 +137,3 @@ module FrenzyBunnies::Worker
 
   end
 end
-
