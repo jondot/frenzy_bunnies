@@ -7,7 +7,7 @@ class FrenzyBunnies::Context
   def initialize(opts={})
     @opts = opts
     @opts[:host]     ||= 'localhost'
-    @opts[:exchange] ||= 'frenzy_bunnies'
+    @opts[:exchanges] ||= 'frenzy_bunnies'
     @opts[:heartbeat] ||= 5
     @opts[:web_host] ||= 'localhost'
     @opts[:web_port] ||= 11333
@@ -22,7 +22,7 @@ class FrenzyBunnies::Context
     @connection = HotBunnies.connect(params)
     @connection.add_shutdown_listener(lambda { |cause| @logger.error("Disconnected: #{cause}"); stop;})
 
-    @queue_factory = FrenzyBunnies::QueueFactory.new(@connection, @opts[:exchange])
+    @queue_factory = FrenzyBunnies::QueueFactory.new(@connection, @opts[:exchanges])
   end
 
   def run(*klasses)
