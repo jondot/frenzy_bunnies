@@ -59,11 +59,9 @@ module FrenzyBunnies::Worker
 
       q = context.queue_factory.build_queue(queue_name, factory_options)
 
-      @s = q.subscribe(ack: true)
+      # @s = q.subscribe(ack: true)
 
-      say "#{@queue_opts[:threads] ? "#{@queue_opts[:threads]} threads " : ''}with #{@queue_opts[:prefetch]} prefetch on <#{queue_name}>."
-
-      @s.each(blocking: false, executor: @thread_pool) do |h, msg|
+      @s = q.subscribe(:ack => true, :blocking => false, :executor => @thread_pool) do |h, msg|
         begin
           wkr = new
         rescue => e
@@ -92,6 +90,8 @@ module FrenzyBunnies::Worker
           error "ERROR #{$!}", msg
         end
       end
+
+      say "#{@queue_opts[:threads] ? "#{@queue_opts[:threads]} threads " : ''}with #{@queue_opts[:prefetch]} prefetch on <#{queue_name}>."
 
       say "workers up."
     end
