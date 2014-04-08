@@ -23,11 +23,11 @@ module FrenzyBunnies::Worker
   end
 
   def say(*args)
-    class.say(*args)
+    self.class.say(*args)
   end
 
   def error(*args)
-    class.error(*args)
+    self.class.error(*args)
   end
 
   def self.included(base)
