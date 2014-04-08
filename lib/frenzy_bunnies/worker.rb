@@ -22,6 +22,14 @@ module FrenzyBunnies::Worker
     end
   end
 
+  def say(*args)
+    class.say(*args)
+  end
+
+  def error(*args)
+    class.error(*args)
+  end
+
   def self.included(base)
     base.extend ClassMethods
   end
