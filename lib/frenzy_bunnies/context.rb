@@ -2,12 +2,12 @@ require 'logger'
 require 'frenzy_bunnies/web'
 
 class FrenzyBunnies::Context
-  attr_reader :queue_factory, :logger, :env, :opts
+  attr_reader :queue_factory, :queue_publisher, :logger, :env, :opts
 
   def initialize(opts={})
     @opts = opts
     @opts[:host]     ||= 'localhost'
-    @opts[:exchange] ||= 'frenzy_bunnies'
+    @opts[:exchanges] ||= 'frenzy_bunnies'
     @opts[:heartbeat] ||= 5
     @opts[:web_host] ||= 'localhost'
     @opts[:web_port] ||= 11333
@@ -19,10 +19,11 @@ class FrenzyBunnies::Context
     params = {:host => @opts[:host], :heartbeat_interval => @opts[:heartbeat]}
     (params[:username], params[:password] = @opts[:username], @opts[:password]) if @opts[:username] && @opts[:password]
     (params[:port] = @opts[:port]) if @opts[:port]
-    @connection = HotBunnies.connect(params)
+    @connection = MarchHare.connect(params)
     @connection.add_shutdown_listener(lambda { |cause| @logger.error("Disconnected: #{cause}"); stop;})
 
-    @queue_factory = FrenzyBunnies::QueueFactory.new(@connection, @opts[:exchange])
+    @queue_factory = FrenzyBunnies::QueueFactory.new(@connection, @opts[:exchanges])
+    @queue_publisher     = FrenzyBunnies::Publisher.new(@opts)
   end
 
   def run(*klasses)

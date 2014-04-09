@@ -1,9 +1,11 @@
 class FrenzyBunnies::QueueFactory
+  include Helpers::Utils
+
   DEFAULT_PREFETCH_COUNT = 10
 
-  def initialize(connection, exchange)
-    @connection = connection
-    @exchange = exchange
+  def initialize(connection, exchanges_opts)
+    @connection     = connection
+    @exchanges_opts = exchanges_opts
   end
 
   def build_queue(name, options = {})
@@ -13,9 +15,11 @@ class FrenzyBunnies::QueueFactory
     channel          = @connection.create_channel
     channel.prefetch = options[:prefetch]
 
-    exchange = channel.exchange(@exchange, options[:exchange_options])
+    exchange_name = options[:exchange_options][:name]
+    exchange_opts = symbolize(@exchanges_opts[exchange_name])
+    exchange = channel.exchange(exchange_name, exchange_opts)
 
-    queue    = channel.queue(name, options[:queue_options])
+    queue = channel.queue(name, options[:queue_options])
     queue.bind(exchange, options[:bind_options])
     queue
   end
@@ -29,8 +33,9 @@ class FrenzyBunnies::QueueFactory
     options[:bind_options]     ||= {}
     options[:prefetch]         ||= DEFAULT_PREFETCH_COUNT
 
-    options[:exchange_options][:type]    ||= :direct
-    options[:exchange_options][:durable] ||= false
+    # options[:exchange_options][:type]    ||= :direct
+    # options[:exchange_options][:durable] ||= false
+    options[:exchange_options] ||= @opts
 
     unless options[:durable].nil?
       options[:exchange_options][:durable] = options[:durable]
