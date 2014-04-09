@@ -15,7 +15,6 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = FrenzyBunnies::VERSION
 
-  gem.add_runtime_dependency 'hot_bunnies', '~> 1.4.0.pre3'
   gem.add_runtime_dependency 'march_hare',  '~> 2.1.0'
   gem.add_runtime_dependency 'thor'
   gem.add_runtime_dependency 'sinatra'
