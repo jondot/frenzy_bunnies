@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative '../spec_helper'
 require 'frenzy_bunnies'
 
 class DummyWorker
@@ -6,7 +6,7 @@ class DummyWorker
   from_queue 'new.feeds'
 
   def work(msg)
-  end 
+  end
 end
 
 class CustomWorker
@@ -14,7 +14,7 @@ class CustomWorker
   from_queue 'new.feeds', :prefetch => 20, :durable => true, :timeout_job_after => 13, :threads => 25
 
   def work(msg)
-  end 
+  end
 end
 
 def with_test_queuefactory(ctx, ack=true, msg=nil, nowork=false)
@@ -44,7 +44,7 @@ describe FrenzyBunnies::Worker do
     DummyWorker.jobs_stats[:passed].must_equal 0
     q = DummyWorker.queue_opts
     q.must_equal({:prefetch=>10, :durable=>false, :timeout_job_after=>5})
-    
+
   end
   it "should respond to configuration tweaks" do
     # check that all params are changed
