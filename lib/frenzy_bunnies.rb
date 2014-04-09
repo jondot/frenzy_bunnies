@@ -13,18 +13,16 @@ require 'frenzy_bunnies/publisher'
 module FrenzyBunnies
 
   def self.publish(msg, exchange_name, routing)
-    @publisher.publish(msg, exchange_name, routing)
+    if @context
+      @context.queue_publisher.publish(msg, exchange_name, routing)
+    else
+      raise Exception, "please configure application"
+    end
   end
 
   def self.configure(opts={})
-    setup_publisher(opts)
-    FrenzyBunnies::Context.new(opts)
+    @context = FrenzyBunnies::Context.new(opts)
   end
 
-private
-
-  def self.setup_publisher(opts)
-    @publisher ||= FrenzyBunnies::Publisher.new(opts)
-  end
 
 end

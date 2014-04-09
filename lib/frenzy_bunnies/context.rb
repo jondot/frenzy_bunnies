@@ -2,7 +2,7 @@ require 'logger'
 require 'frenzy_bunnies/web'
 
 class FrenzyBunnies::Context
-  attr_reader :queue_factory, :logger, :env, :opts
+  attr_reader :queue_factory, :queue_publisher, :logger, :env, :opts
 
   def initialize(opts={})
     @opts = opts
@@ -23,6 +23,7 @@ class FrenzyBunnies::Context
     @connection.add_shutdown_listener(lambda { |cause| @logger.error("Disconnected: #{cause}"); stop;})
 
     @queue_factory = FrenzyBunnies::QueueFactory.new(@connection, @opts[:exchanges])
+    @queue_publisher     = FrenzyBunnies::Publisher.new(@opts)
   end
 
   def run(*klasses)
