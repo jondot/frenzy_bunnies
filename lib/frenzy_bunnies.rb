@@ -1,5 +1,6 @@
 require 'hot_bunnies'
 require 'timeout'
+require 'frenzy_bunnies/helpers/utils'
 
 require "frenzy_bunnies/version"
 require 'frenzy_bunnies/health'

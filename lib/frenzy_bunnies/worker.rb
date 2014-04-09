@@ -59,7 +59,6 @@ module FrenzyBunnies::Worker
 
       q = context.queue_factory.build_queue(queue_name, factory_options)
 
-      # @s = q.subscribe(ack: true)
 
       @s = q.subscribe(:ack => true, :blocking => false, :executor => @thread_pool) do |h, msg|
         begin

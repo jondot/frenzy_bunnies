@@ -1,4 +1,6 @@
 class FrenzyBunnies::QueueFactory
+  include Helpers::Utils
+
   DEFAULT_PREFETCH_COUNT = 10
 
   def initialize(connection, exchanges_opts)
@@ -52,10 +54,6 @@ class FrenzyBunnies::QueueFactory
         raise ArgumentError, "Please specify :routing_key in :bind_options when using :direct exchange"
       end
     end
-  end
-
-  def symbolize(opts)
-    opts.inject({}){|h,(k,v)| h.merge({ k.to_sym => v}) }
   end
 
 end
