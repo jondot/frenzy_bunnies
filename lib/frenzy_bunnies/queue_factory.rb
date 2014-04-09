@@ -13,7 +13,6 @@ class FrenzyBunnies::QueueFactory
     channel          = @connection.create_channel
     channel.prefetch = options[:prefetch]
 
-
     exchange_name = options[:exchange_options][:name]
     exchange_opts = symbolize(@exchanges_opts[exchange_name])
     exchange = channel.exchange(exchange_name, exchange_opts)

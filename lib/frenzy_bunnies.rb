@@ -11,8 +11,8 @@ require 'frenzy_bunnies/publisher'
 
 module FrenzyBunnies
 
-  def self.publish(msg, routing)
-    @publisher.publish(msg, routing)
+  def self.publish(msg, exchange_name, routing)
+    @publisher.publish(msg, exchange_name, routing)
   end
 
   def self.configure(opts={})
