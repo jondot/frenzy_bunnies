@@ -87,7 +87,7 @@ module FrenzyBunnies::Worker
           context.handle_exception(ex, msg)
           h.reject
           incr! :failed
-          last_error = ex.backtrace[0..3].join('\n')
+          last_error = ex.backtrace[0..3].join("\n")
           error "[ERROR] #{$!} (#{last_error})", msg
         end
       end
