@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'hot_bunnies'
 require 'timeout'
 require 'frenzy_bunnies/helpers/utils'
@@ -12,17 +14,18 @@ require 'frenzy_bunnies/publisher'
 
 module FrenzyBunnies
 
+  # TODO: Refactor sharing context
+  #       This could be tricky in multithread env
   def self.publish(msg, exchange_name, routing)
     if @context
       @context.queue_publisher.publish(msg, exchange_name, routing)
     else
-      raise Exception, "please configure application"
+      raise Exception, "Could not find active context, call #configure first!"
     end
   end
 
-  def self.configure(opts={})
+  def self.configure(opts = {})
     @context = FrenzyBunnies::Context.new(opts)
   end
-
 
 end
