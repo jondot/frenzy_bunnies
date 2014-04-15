@@ -83,7 +83,7 @@ module FrenzyBunnies::Worker
           h.reject
           incr! :failed
           error "[TIMEOUT] #{@queue_opts[:timeout_job_after]}s", msg
-        rescue => ex
+        rescue Exception => ex
           h.reject
           context.handle_exception(ex, msg)
           incr! :failed
