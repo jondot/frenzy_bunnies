@@ -76,18 +76,19 @@ module FrenzyBunnies::Worker
             else
               h.reject
               incr! :failed
-              error "REJECTED", msg
+              error "[REJECTED]", msg
             end
           end
         rescue Timeout::Error
           h.reject
           incr! :failed
-          error "TIMEOUT #{@queue_opts[:timeout_job_after]}s", msg
+          error "[TIMEOUT] #{@queue_opts[:timeout_job_after]}s", msg
         rescue => ex
           context.handle_exception(ex, msg)
           h.reject
           incr! :failed
-          error "ERROR #{$!}", msg
+          last_error = ex.backtrace[0]
+          error "[ERROR] #{$!} (#{last_error})", msg
         end
       end
 
