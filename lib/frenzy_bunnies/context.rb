@@ -66,9 +66,9 @@ class FrenzyBunnies::Context
   end
 
   # Pass exception to all handlers
-  def handle_exception(ex)
+  def handle_exception(ex, msg)
     @error_handlers.each do |handler|
-      handler.call(ex)
+      handler.call(ex, msg)
     end
   end
 
