@@ -27,7 +27,7 @@ class FrenzyBunnies::Context
     @connection.add_shutdown_listener(lambda { |cause| @logger.error("Disconnected: #{cause}"); stop;})
 
     @queue_factory   = FrenzyBunnies::QueueFactory.new(@connection, @opts[:exchanges])
-    @queue_publisher = FrenzyBunnies::Publisher.new(@opts)
+    @queue_publisher = FrenzyBunnies::Publisher.new(@connection, @opts)
 
     @error_handlers  = @opts[:error_handlers] || []
   end
