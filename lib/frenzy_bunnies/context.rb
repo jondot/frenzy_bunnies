@@ -7,14 +7,14 @@ class FrenzyBunnies::Context
 
   def initialize(opts={})
     @opts = opts
-    @opts[:host]      ||= 'localhost'
-    @opts[:exchanges] ||= 'frenzy_bunnies'
-    @opts[:heartbeat] ||= 5
-    @opts[:web_host]  ||= 'localhost'
-    @opts[:web_port]  ||= 11333
-    @opts[:env]       ||= 'development'
-    @opts[:web_threadfilter] ||= /^pool-.*/
-
+    @opts[:message_persistent] ||= false
+    @opts[:host]               ||= 'localhost'
+    @opts[:exchanges]          ||= 'frenzy_bunnies'
+    @opts[:heartbeat]          ||= 5
+    @opts[:web_host]           ||= 'localhost'
+    @opts[:web_port]           ||= 11333
+    @opts[:env]                ||= 'development'
+    @opts[:web_threadfilter]   ||= /^pool-.*/
 
     @env    = @opts[:env]
     @logger = @opts[:logger] || Logger.new(STDOUT)

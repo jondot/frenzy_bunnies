@@ -1,6 +1,5 @@
 # encoding: utf-8
 
-require 'hot_bunnies'
 require 'timeout'
 require 'frenzy_bunnies/helpers/utils'
 
@@ -16,7 +15,7 @@ module FrenzyBunnies
 
   # TODO: Refactor sharing context
   #       This could be tricky in multithread env
-  def self.publish(msg, exchange_name, routing)
+  def self.publish(msg, exchange_name, routing, persistet='')
     if @context
       @context.queue_publisher.publish(msg, exchange_name, routing)
     else

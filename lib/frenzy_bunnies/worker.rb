@@ -5,7 +5,7 @@ module FrenzyBunnies::Worker
 
   def ack!
     true
-  end
+  end  
 
   def work
     raise Exception, "Please overwrite this method!"
@@ -109,7 +109,7 @@ module FrenzyBunnies::Worker
       @queue_opts
     end
 
-    def jobs_stats
+    def jobs_stats    
       Hash[ @jobs_stats.map{ |k,v| [k, v.value] } ].merge({ since: @working_since.to_i })
     end
 
