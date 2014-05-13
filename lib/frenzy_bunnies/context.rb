@@ -1,5 +1,6 @@
 require 'logger'
 require 'frenzy_bunnies/web'
+require 'march_hare'
 
 class FrenzyBunnies::Context
   attr_reader :queue_factory, :queue_publisher, :logger, :env, :opts,
