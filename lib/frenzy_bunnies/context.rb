@@ -6,7 +6,7 @@ class FrenzyBunnies::Context
   attr_reader :queue_factory, :queue_publisher, :logger, :env, :opts,
               :error_handlers
 
-  def initialize(opts={})
+  def initialize(opts={})    
     @opts = opts
     @opts[:message_persistent] ||= false
     @opts[:host]               ||= 'localhost'
