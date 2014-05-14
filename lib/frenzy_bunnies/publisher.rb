@@ -1,4 +1,3 @@
-require 'pry'
 module FrenzyBunnies
   class Publisher
     include Helpers::Utils
