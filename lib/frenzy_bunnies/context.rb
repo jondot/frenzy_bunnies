@@ -1,20 +1,21 @@
 require 'logger'
 require 'frenzy_bunnies/web'
+require 'march_hare'
 
 class FrenzyBunnies::Context
   attr_reader :queue_factory, :queue_publisher, :logger, :env, :opts,
               :error_handlers
 
-  def initialize(opts={})
+  def initialize(opts={})    
     @opts = opts
-    @opts[:host]      ||= 'localhost'
-    @opts[:exchanges] ||= 'frenzy_bunnies'
-    @opts[:heartbeat] ||= 5
-    @opts[:web_host]  ||= 'localhost'
-    @opts[:web_port]  ||= 11333
-    @opts[:env]       ||= 'development'
-    @opts[:web_threadfilter] ||= /^pool-.*/
-
+    @opts[:message_persistent] ||= false
+    @opts[:host]               ||= 'localhost'
+    @opts[:exchanges]          ||= 'frenzy_bunnies'
+    @opts[:heartbeat]          ||= 5
+    @opts[:web_host]           ||= 'localhost'
+    @opts[:web_port]           ||= 11333
+    @opts[:env]                ||= 'development'
+    @opts[:web_threadfilter]   ||= /^pool-.*/
 
     @env    = @opts[:env]
     @logger = @opts[:logger] || Logger.new(STDOUT)

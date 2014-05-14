@@ -1,6 +1,5 @@
 # encoding: utf-8
 
-require 'hot_bunnies'
 require 'timeout'
 require 'frenzy_bunnies/helpers/utils'
 
