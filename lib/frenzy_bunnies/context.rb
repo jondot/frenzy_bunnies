@@ -6,7 +6,7 @@ class FrenzyBunnies::Context
   attr_reader :queue_factory, :queue_publisher, :logger, :env, :opts,
               :error_handlers
 
-  def initialize(opts={})    
+  def initialize(opts={})
     @opts = opts
     @opts[:message_persistent] ||= false
     @opts[:host]               ||= 'localhost'
@@ -23,6 +23,8 @@ class FrenzyBunnies::Context
 
     (params[:username], params[:password] = @opts[:username], @opts[:password]) if @opts[:username] && @opts[:password]
     (params[:port] = @opts[:port]) if @opts[:port]
+
+    params[:thread_pool_size] = (Java::JavaLang::Runtime.getRuntime.availableProcessors * 3)
 
     @connection = MarchHare.connect(params)
     @connection.add_shutdown_listener(lambda { |cause| @logger.error("Disconnected: #{cause}"); stop;})
