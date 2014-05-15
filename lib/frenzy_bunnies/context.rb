@@ -24,7 +24,8 @@ class FrenzyBunnies::Context
     (params[:username], params[:password] = @opts[:username], @opts[:password]) if @opts[:username] && @opts[:password]
     (params[:port] = @opts[:port]) if @opts[:port]
 
-    params[:thread_pool_size] = (Java::JavaLang::Runtime.getRuntime.availableProcessors * 3)
+    # params[:thread_pool_size] = (Java::JavaLang::Runtime.getRuntime.availableProcessors * 3)
+    params[:executor_factory] = Proc.new { MarchHare::ThreadPools.dynamically_growing }
 
     @connection = MarchHare.connect(params)
     @connection.add_shutdown_listener(lambda { |cause| @logger.error("Disconnected: #{cause}"); stop;})
