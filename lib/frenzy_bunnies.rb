@@ -1,4 +1,4 @@
-require 'hot_bunnies'
+require 'march_hare'
 require 'timeout'
 
 module FrenzyBunnies

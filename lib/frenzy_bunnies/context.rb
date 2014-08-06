@@ -19,7 +19,7 @@ class FrenzyBunnies::Context
     params = {:host => @opts[:host], :heartbeat_interval => @opts[:heartbeat]}
     (params[:username], params[:password] = @opts[:username], @opts[:password]) if @opts[:username] && @opts[:password]
     (params[:port] = @opts[:port]) if @opts[:port]
-    @connection = HotBunnies.connect(params)
+    @connection = MarchHare.connect(params)
     @connection.add_shutdown_listener(lambda { |cause| @logger.error("Disconnected: #{cause}"); stop;})
 
     @queue_factory = FrenzyBunnies::QueueFactory.new(@connection, @opts[:exchange])
