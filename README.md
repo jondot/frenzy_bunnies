@@ -107,7 +107,7 @@ In your worker class, say `from_queue 'queue_name'` and pass any of these option
 :durable   # default false. durability of the queue
 :timeout_job_after # default 5. reject the message if not processed for number of seconds
 :threads  # default none. number of threads in the threadpool. leave empty to let the threadpool manage it.
-:type # default :direct. type of exchange used.
+:exchange_type # default :direct. type of exchange used.
 :routing_key # default queue_name. allows for other routing keys, useful for topic exchanges.
 ```
 
