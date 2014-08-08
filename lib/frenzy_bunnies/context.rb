@@ -1,5 +1,4 @@
 require 'logger'
-require 'frenzy_bunnies/web'
 
 class FrenzyBunnies::Context
   attr_reader :queue_factory, :logger, :env, :opts
@@ -9,9 +8,6 @@ class FrenzyBunnies::Context
     @opts[:host]     ||= 'localhost'
     @opts[:exchange] ||= 'frenzy_bunnies'
     @opts[:heartbeat] ||= 5
-    @opts[:web_host] ||= 'localhost'
-    @opts[:web_port] ||= 11333
-    @opts[:web_threadfilter] ||= /^pool-.*/
     @opts[:env] ||= 'development'
 
     @env = @opts[:env]
@@ -28,10 +24,6 @@ class FrenzyBunnies::Context
   def run(*klasses)
     @klasses = []
     klasses.each{|klass| klass.start(self); @klasses << klass}
-    return nil if @opts[:disable_web_stats]
-    Thread.new do
-      FrenzyBunnies::Web.run_with(@klasses, :host => @opts[:web_host], :port => @opts[:web_port], :threadfilter => @opts[:web_threadfilter], :logger => @logger)
-    end
   end
 
   def stop
