@@ -15,5 +15,3 @@ guard 'minitest' do
   # watch(%r|^app/helpers/(.*)\.rb|)     { |m| "test/helpers/#{m[1]}_test.rb" }
   # watch(%r|^app/models/(.*)\.rb|)      { |m| "test/unit/#{m[1]}_test.rb" }  
 end
-
-guard 'coffeescript', :input => 'lib/frenzy_bunnies/web/public/js', :output => 'lib/frenzy_bunnies/web/public/js', :all_on_start => true

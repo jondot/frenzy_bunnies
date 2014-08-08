@@ -75,27 +75,6 @@ f.run FeedWorker, FeedDownloader
 In the listing above, `f.run` accepts your worker _classes_, and will run your workers immediately.
 
 
-## Web Dashboard
-
-When FrenzyBunnies run, it will automatically create a web dashboard for you, on `localhost:11333` by default.
-
-
-Currently, the dashboard displays your job statistics (passed vs. failed), JVM
-health (heap usage) and threads overview.
-
-
-<img src="https://raw.github.com/jondot/frenzy_bunnies/master/fb-cap.png"/><br/>
-
-
-Changing the bound address is easy to do through the many options you can pass to the running `Context`:
-
-```ruby
-f = FrenzyBunnies::Context.new :web_host=>'0.0.0.0', :web_port=>11222
-```
-
-
-context definitions
-
 ## In Detail
 
 ### Worker Configuration
@@ -103,6 +82,9 @@ context definitions
 In your worker class, say `from_queue 'queue_name'` and pass any of these options:
 
 ```ruby
+:exchange # default frenzy_bunnies. name of exchange used.
+:exchange_type # default :direct. type of exchange used.
+:routing_key # default queue_name. allows for other routing keys, useful for topic exchanges.
 :prefetch  # default 10. number of messages to prefetch each time
 :durable   # default false. durability of the queue
 :timeout_job_after # default 5. reject the message if not processed for number of seconds
@@ -126,11 +108,7 @@ Global / running configuration can be set through the running context `FrenzyBun
 
 ```ruby
 :host       # default 'localhost'
-:exchange   # default 'frenzy_bunnies'
 :heartbeat  # default 5
-:web_host   # default 'localhost'
-:web_port   # default 11333
-:web_threadfilter # default /^pool-.*/
 :env        # default ''
 ```
 
@@ -138,7 +116,7 @@ Global / running configuration can be set through the running context `FrenzyBun
 Example:
 
 ```ruby
-FrenzyBunnies::Context.new :exchange=> 'foo'
+FrenzyBunnies::Context.new :heartbeat=> 10
 ```
 
 ### AMQP Queue Wiring Under the Hood
