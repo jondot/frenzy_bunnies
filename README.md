@@ -103,12 +103,13 @@ context definitions
 In your worker class, say `from_queue 'queue_name'` and pass any of these options:
 
 ```ruby
+:exchange # default frenzy_bunnies. name of exchange.
+:exchange_type # default :direct. type of exchange used.
+:routing_key # default queue_name. allows for other routing keys, useful for topic exchanges.
 :prefetch  # default 10. number of messages to prefetch each time
 :durable   # default false. durability of the queue
 :timeout_job_after # default 5. reject the message if not processed for number of seconds
 :threads  # default none. number of threads in the threadpool. leave empty to let the threadpool manage it.
-:exchange_type # default :direct. type of exchange used.
-:routing_key # default queue_name. allows for other routing keys, useful for topic exchanges.
 ```
 
 Example:
@@ -128,7 +129,6 @@ Global / running configuration can be set through the running context `FrenzyBun
 
 ```ruby
 :host       # default 'localhost'
-:exchange   # default 'frenzy_bunnies'
 :heartbeat  # default 5
 :web_host   # default 'localhost'
 :web_port   # default 11333
@@ -140,7 +140,7 @@ Global / running configuration can be set through the running context `FrenzyBun
 Example:
 
 ```ruby
-FrenzyBunnies::Context.new :exchange=> 'foo'
+FrenzyBunnies::Context.new :heartbeat => 10
 ```
 
 ### AMQP Queue Wiring Under the Hood
