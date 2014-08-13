@@ -1,6 +1,6 @@
 # FrenzyBunnies
 
-A lightweight background workers library based on JRuby and the very efficient `hot_bunnies` RabbitMQ driver for very fast and
+A lightweight background workers library based on JRuby and the very efficient `march_hare` RabbitMQ driver for very fast and
 efficient processing.
 
 Unlike other background job processing libraries, a Frenzy Bunnies worker is offering its work to a native JVM-based thread pool, where threads are allocated and cached.  
