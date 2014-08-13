@@ -6,7 +6,7 @@ class FrenzyBunnies::CLI < Thor
 
     (\\___/)
     (='.'=)  Frenzy Bunnies!
-    (")_(")  JRuby based workers on top of hot_bunnies
+    (")_(")  JRuby based workers on top of march_hare
 
   EOF
 

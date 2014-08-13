@@ -1,15 +1,11 @@
 require 'atomic'
 
-
 module FrenzyBunnies::Worker
-  import java.util.concurrent.Executors
-
   def ack!
     true
   end
 
   def work
-
   end
 
   def self.included(base)
@@ -36,17 +32,16 @@ module FrenzyBunnies::Worker
       @queue_opts[:timeout_job_after] ||=5
 
       if @queue_opts[:threads]
-        @thread_pool = Executors.new_fixed_thread_pool(@queue_opts[:threads])
+        @thread_pool = MarchHare::ThreadPools.fixed_of_size(@queue_opts[:threads])
       else
-        @thread_pool = Executors.new_cached_thread_pool
+        @thread_pool = MarchHare::ThreadPools.dynamically_growing
       end
 
       q = context.queue_factory.build_queue(queue_name, @queue_opts[:prefetch], @queue_opts[:durable])
-      @s = q.subscribe(:ack => true)
 
       say "#{@queue_opts[:threads] ? "#{@queue_opts[:threads]} threads " : ''}with #{@queue_opts[:prefetch]} prefetch on <#{queue_name}>."
 
-      @s.each(:blocking => false, :executor => @thread_pool) do |h, msg|
+      q.subscribe(:ack => true, :blocking => false, :executor => @thread_pool) do |h, msg|
         wkr = new
         begin
           Timeout::timeout(@queue_opts[:timeout_job_after]) do
