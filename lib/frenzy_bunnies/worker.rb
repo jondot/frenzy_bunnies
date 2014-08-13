@@ -37,7 +37,7 @@ module FrenzyBunnies::Worker
         @thread_pool = MarchHare::ThreadPools.dynamically_growing
       end
 
-      q = context.queue_factory.build_queue(queue_name, @queue_opts[:prefetch], @queue_opts[:durable])
+      q = context.queue_factory.build_queue(queue_name, @queue_opts)
 
       say "#{@queue_opts[:threads] ? "#{@queue_opts[:threads]} threads " : ''}with #{@queue_opts[:prefetch]} prefetch on <#{queue_name}>."
 

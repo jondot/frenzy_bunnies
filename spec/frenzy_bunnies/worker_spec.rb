@@ -22,7 +22,7 @@ def with_test_queuefactory(ctx, ack=true, msg=nil, nowork=false)
   q = Object.new
   s = Object.new
   hdr = Object.new
-  mock(qf).build_queue(anything, anything, anything) { q }
+  mock(qf).build_queue(anything, anything) { q }
   mock(q).subscribe(anything){ s }
 
   mock(s).each(anything) { |h,b| b.call(hdr, msg) unless nowork }
