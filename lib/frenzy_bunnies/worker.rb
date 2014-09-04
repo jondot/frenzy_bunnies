@@ -93,7 +93,7 @@ module FrenzyBunnies::Worker
             error "[ERROR] #{$!} (#{last_error})", msg
           end
         end
-      endver
+      end
 
       say "#{@queue_opts[:threads] ? "#{@queue_opts[:threads]} threads " : ''}with #{@queue_opts[:prefetch]} prefetch on <#{queue_name}>."
 
