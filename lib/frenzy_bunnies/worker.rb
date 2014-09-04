@@ -59,7 +59,6 @@ module FrenzyBunnies::Worker
 
       q = context.queue_factory.build_queue(queue_name, factory_options)
 
-
       @s = q.subscribe(:ack => true, :blocking => false, :executor => @thread_pool) do |h, msg|
         begin
           wkr = new
@@ -110,7 +109,7 @@ module FrenzyBunnies::Worker
     end
 
     def jobs_stats    
-      Hash[ @jobs_stats.map{ |k,v| [k, v.value] } ].merge({ since: @working_since.to_i })
+      Hash[ @jobs_stats.map{ |k,v| [k, v.value] } ].merge({ since: @working_since.to_i, thread_pool_size: @thread_pool.getPoolSize })
     end
 
     def say(text)
