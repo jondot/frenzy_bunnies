@@ -37,10 +37,12 @@ module FrenzyBunnies::Worker
       @jobs_stats = { failed: Atomic.new(0), passed: Atomic.new(0) }
       @working_since = Time.now
 
-      @logger = context.logger
+      @logger   = context.logger
+      @channels = []
 
       queue_name = "#{@queue_name}_#{context.env}"
 
+      @queue_opts[:channels_count]    ||= 1
       @queue_opts[:prefetch]          ||= 10
       @queue_opts[:durable]           ||= false
       @queue_opts[:timeout_job_after] ||= 5
@@ -57,43 +59,45 @@ module FrenzyBunnies::Worker
                                                  :durable,
                                                  :prefetch)
 
-      q = context.queue_factory.build_queue(queue_name, factory_options)
+      @queue_opts[:channels_count].times do |i|
+        q = context.queue_factory.build_queue(queue_name, factory_options)
 
-      @s = q.subscribe(:ack => true, :blocking => false, :executor => @thread_pool) do |h, msg|
-        begin
-          wkr = new
-        rescue => e
-          error "Error while initializing worker #{@queue_name}", e.inspect
-          raise e
-        end
-
-        begin
-          Timeout::timeout(@queue_opts[:timeout_job_after]) do
-            if(wkr.run!(h, msg))
-              h.ack
-              incr! :passed
-            else
-              h.reject
-              incr! :failed
-              error "[REJECTED]", msg
-            end
+        @channels[i] = q.subscribe(ack: true, blocking: false, executor: @thread_pool) do |h, msg|
+          begin
+            wkr = new
+          rescue => e
+            error "Error while initializing worker #{@queue_name}", e.inspect
+            raise e
           end
-        rescue Timeout::Error
-          h.reject
-          incr! :failed
-          error "[TIMEOUT] #{@queue_opts[:timeout_job_after]}s", msg
-        rescue Exception => ex
-          h.reject
-          context.handle_exception(ex, msg)
-          incr! :failed
-          last_error = ex.backtrace[0..3].join("\n")
-          error "[ERROR] #{$!} (#{last_error})", msg
+
+          begin
+            Timeout::timeout(@queue_opts[:timeout_job_after]) do
+              if(wkr.run!(h, msg))
+                h.ack
+                incr! :passed
+              else
+                h.reject
+                incr! :failed
+                error "[REJECTED]", msg
+              end
+            end
+          rescue Timeout::Error
+            h.reject
+            incr! :failed
+            error "[TIMEOUT] #{@queue_opts[:timeout_job_after]}s", msg
+          rescue Exception => ex
+            h.reject
+            context.handle_exception(ex, msg)
+            incr! :failed
+            last_error = ex.backtrace[0..3].join("\n")
+            error "[ERROR] #{$!} (#{last_error})", msg
+          end
         end
-      end
+      endver
 
       say "#{@queue_opts[:threads] ? "#{@queue_opts[:threads]} threads " : ''}with #{@queue_opts[:prefetch]} prefetch on <#{queue_name}>."
 
-      say "workers up."
+      say "spawned #{@queue_opts[:channels_count]} channels, workers up."
     end
 
     def stop
@@ -108,7 +112,7 @@ module FrenzyBunnies::Worker
       @queue_opts
     end
 
-    def jobs_stats    
+    def jobs_stats
       Hash[ @jobs_stats.map{ |k,v| [k, v.value] } ].merge({ since: @working_since.to_i, thread_pool_size: @thread_pool.getPoolSize })
     end
 
